@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="https://cdn.socket.io/socket.io-3.0.5.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+    <script>
+      const socket = io();
+      let alpha = 0;
+      let beta = 0;
+      let gamma = 0;
+
+      function deg2rad(x) {
+          return x * Math.PI / 180
+      }
+      
+      socket.on("orientation", (message) => {
+          console.log(message);
+          alpha = deg2rad(message.alpha ?? 0);
+          beta = deg2rad(message.beta ?? 0);
+          gamma = deg2rad(message.gamma ?? 0);
+      });
+    </script>
+    <script src="view.js" type="module"></script>
+  </head>
+  <body>
+    <canvas>
+  </body>
+</html>

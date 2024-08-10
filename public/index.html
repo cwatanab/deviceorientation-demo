@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="https://cdn.socket.io/socket.io-3.0.5.min.js"></script>
+    <link rel="stylesheet" href="https://newcss.net/new.min.css" />
+    <title>センサーテスト</title>
+  </head>
+  <body>
+    <h1>センサーテスト</h1>
+
+    <p>
+      <button>測定開始</button>
+    </p>
+    <h2>加速度センサー</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 200px">方向</th>
+          <th>値</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>X</td>
+          <td id="x">0</td>
+        </tr>
+        <tr>
+          <td>Y</td>
+          <td id="y">0</td>
+        </tr>
+        <tr>
+          <td>Z</td>
+          <td id="z">0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>ジャイロセンサー</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 200px">方向</th>
+          <th>値</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>absolute</td>
+          <td id="absolute">0</td>
+        </tr>
+        <tr>
+          <td>alpha</td>
+          <td id="alpha">0</td>
+        </tr>
+        <tr>
+          <td>beta</td>
+          <td id="beta">0</td>
+        </tr>
+        <tr>
+          <td>gamma</td>
+          <td id="gamma">0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      const socket = io();
+
+      //window.addEventListener("load", () => {
+      document.querySelector("button").addEventListener("click", () => {
+        console.log("click");
+        if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
+          DeviceMotionEvent.requestPermission()
+            .then((state) => {
+              if (state !== "granted") {
+                alert("動作と方向へのアクセスを許可してください");
+                return;
+              }
+            })
+            .catch((err) => console.error(err));
+        }
+        window.addEventListener("devicemotion", (e) => {
+          console.log("devicemotion");
+          console.log(e);
+          document.getElementById("x").innerText = e.accelerationIncludingGravity.x?.toFixed(1);
+          document.getElementById("y").innerText = e.accelerationIncludingGravity.y?.toFixed(1);
+          document.getElementById("z").innerText = e.accelerationIncludingGravity.z?.toFixed(1);
+          //socket.emit("motion", {
+          //  accelX: e.accelerationIncludingGravity.x,
+          //  accelY: e.accelerationIncludingGravity.y,
+          //  accelZ: e.accelerationIncludingGravity.z,
+          //});
+        });
+
+        if (window.DeviceOrientationEvent && window.DeviceOrientationEvent.requestPermission) {
+          DeviceOrientationEvent.requestPermission()
+            .then((state) => {
+              if (state !== "granted") {
+                alert("動作と方向へのアクセスを許可してください");
+                return;
+              }
+            })
+            .catch((err) => console.error(err));
+        }
+        window.addEventListener("deviceorientation", (e) => {
+          console.log("deviceorientation");
+          console.log(e);
+          document.getElementById("absolute").innerText = e.absolute;
+          document.getElementById("alpha").innerText = e.alpha?.toFixed(1);
+          document.getElementById("beta").innerText = e.beta?.toFixed(1);
+          document.getElementById("gamma").innerText = e.gamma?.toFixed(1);
+          socket.emit("orientation", {
+              absolute: e.absolute,
+              alpha: e.alpha,
+              beta: e.beta,
+              gamma: e.gamma,
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
