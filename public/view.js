@@ -13,9 +13,20 @@ const q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
 
 // 携帯電話のモックオブジェクト
 const geometry = new THREE.BoxGeometry(72, 148, 8);  // iphone の実サイズ
+const loader = new THREE.TextureLoader();
+const texture = loader.load('iphone.jpg');
+texture.colorSpace = THREE.SRGBColorSpace;
+const materials = [
+   new THREE.MeshStandardMaterial({ color: "silver" }),
+   new THREE.MeshStandardMaterial({ color: "silver" }),
+   new THREE.MeshStandardMaterial({ color: "silver" }),
+   new THREE.MeshStandardMaterial({ color: "silver" }),
+   new THREE.MeshBasicMaterial({ map: texture }),
+   new THREE.MeshStandardMaterial({ color: "silver" }),
+];
 const edges = new THREE.EdgesGeometry(geometry);
 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: "black" }));
-const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: "skyblue" }));
+const mesh = new THREE.Mesh(geometry, materials);
 const cube = new THREE.Group();
 cube.rotation.reorder("YXZ");
 cube.add(line);
