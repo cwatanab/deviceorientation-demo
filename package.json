@@ -14,6 +14,7 @@
     "@ngrok/ngrok": "^1.4.1",
     "express": "^4.19.2",
     "pnpm": "^9.8.0",
+    "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.7.5"
   }
 }
